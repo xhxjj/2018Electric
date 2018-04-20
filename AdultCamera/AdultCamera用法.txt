@@ -1,0 +1,43 @@
+1，构造函数两个参数，SurfaceView(就是对应xml文件中surfaceview的view对象)，ImagePath(图片存放的绝对路径)
+2,takePicture()方法，在点击拍照按钮时调用的方法
+2，cameraOnResume(),需要放在Activit的onResume方法中
+
+功能简介，为SurfaceView绑定一个照相机对象，在视图中展现图像预览，并将图片放在指定路径
+
+用例：
+////////////////////////////////////////////////////////////////////////
+
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.SurfaceView;
+import android.view.View;
+public class MyCamera extends Activity{
+
+    private String filepath="/sdcard/temp.png";
+    private SurfaceView surfaceView;
+    private AdultCamera adultCamera;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_my_camera);
+
+        surfaceView = (SurfaceView) findViewById(R.id.preview);
+        adultCamera = new AdultCamera(surfaceView,filepath);
+    }
+    public void capture(View view) {
+        adultCamera.takePicture();
+        Intent intent = new Intent(MyCamera.this, MainActivity.class);
+        intent.putExtra("path", filepath);
+        setResult(3, intent);
+        MyCamera.this.finish();
+
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        adultCamera.cameraOnResume();
+    }
+    
+}
